@@ -185,7 +185,7 @@ class Morie_attack(Attack):
 
 
             if self.targeted:
-                adv_cost = self.adv_loss(at_outputs, targeted_labels.to(self.device))
+                adv_cost = self.adv_loss(at_outputs, (targeted_labels.to(self.device)).long())
             else:
                 adv_cost = -1 * self.adv_loss(at_outputs, org_labels)
 
@@ -240,7 +240,7 @@ if __name__ == "__main__":
     model = model.eval()
 
     ## Save the results of MA
-    Save_results = 'False'
+    Save_results = 'True'
     if Save_results == 'True':
         savedir = './Results'
         adv_dir = os.path.join(savedir, 'adv')
@@ -274,7 +274,7 @@ if __name__ == "__main__":
     for batch in range(epoch):
 
         print("-" * 70)
-        org_imgs, org_labels = normal_iter.next()
+        org_imgs, org_labels = next(normal_iter)
         org_imgs = org_imgs * 255.0
         print('Epoch = ' + str(batch))
 
@@ -283,7 +283,7 @@ if __name__ == "__main__":
         targeted = True
 
 
-        attack = Morie_attack(model, noise_budget = noise_budget, img_w = 299, img_h = 299, scale_factor = 3, targeted = targeted, batch_size=batch_size, steps = 50)
+        attack = Morie_attack(model, noise_budget = noise_budget, img_w = 299, img_h = 299, scale_factor = 3, targeted = targeted, batch_size=batch_size, steps = 1)
         at_images, rotate_images, dim_images, \
         at_labels, rotate_labels, dim_labels, \
         org_percentges, at_percentages, rotate_percentages, dim_percentages = attack(org_imgs, org_labels, targeted_labels)
