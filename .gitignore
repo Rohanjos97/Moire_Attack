@@ -1,6 +1,7 @@
 __pycache__/
 Results/
 data/dataset/
+.ipynb_checkpoints/
 
-data/test-data.zip
+*test-data.zip
 .git
