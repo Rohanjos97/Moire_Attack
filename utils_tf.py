@@ -17,7 +17,7 @@ def imshow(img, title):
     plt.show()
     
 def image_folder_custom_label(root, transform, idx2label):
-    data_gen = ImageDataGenerator()
+    data_gen = ImageDataGenerator(validation_split=0.0)
     old_data = data_gen.flow_from_directory(root, target_size=(224, 224), class_mode='sparse')
     old_classes = list(old_data.class_indices.keys())
     
@@ -25,20 +25,18 @@ def image_folder_custom_label(root, transform, idx2label):
     
     for i, item in enumerate(idx2label) :
         label2idx[item] = i
-    
     new_data = data_gen.flow_from_directory(root, target_size=(224, 224), 
                                  classes=old_classes, class_mode='sparse',
                                  interpolation='nearest', 
                                  shuffle=True, batch_size=32,
                                  save_to_dir=None, save_prefix='',
                                  save_format='png', follow_links=False,
-                                 subset=None, validation_split=0.0,
+                                 subset=None,
                                  seed=None, 
                                  )
     
-    new_data.class_indices = label2idx
-    new_data.classes = list(label2idx.keys())
-
+#     new_data.class_indices = label2idx
+#     new_data.classes = list(label2idx.keys())
     return new_data
 
 def create_dir(dir, print_flag = False):
